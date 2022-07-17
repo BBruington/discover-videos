@@ -4,8 +4,22 @@ import Banner from '../components/banner/banner';
 import NavBar from '../components/nav/navbar';
 import Card from '../components/card/card';
 import SectionCards from '../components/card/section-cards';
+import { getVideos, getPopularVideos } from '../lib/videos';
 
-export default function Home() {
+export async function getServerSideProps() {
+
+  const disneyVideos = await getVideos('disney%20trailer');
+  const productivityVideos = await getVideos('productivity');
+  const travelVideos = await getVideos('travel');
+  const popularVideos = await getPopularVideos();
+
+  return { props: { disneyVideos, travelVideos, productivityVideos, popularVideos } };
+
+}
+
+export default function Home({ disneyVideos, travelVideos, productivityVideos, popularVideos }) {
+  
+
   return (
     <div className={styles.container}>
       <Head>
@@ -14,23 +28,22 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <NavBar username="BennyBoy@lmao.com" />
+      <div className={styles.main}>
+        <NavBar username="BennyBoy@lmao.com" />
 
-      <Banner 
-        title='Clifford the red dog' 
-        subTitle="a very cute dog"  
-        imgUrl="/static/Clifford.webp"
-        />
+        <Banner 
+          title='Clifford the red dog' 
+          subTitle="a very cute dog"  
+          imgUrl="/static/Clifford.webp"
+          />
 
-      <SectionCards title='Disney' />
-
-      <Card imgUrl='/static/clifford.webp' 
-      size='large' />
-      <Card imgUrl='/static/clifford.webp' 
-      size='medium' />
-      <Card imgUrl='/static/clifford.webp' 
-      size='small' />
-      
+        <div className={styles.sectionWrapper}>
+          <SectionCards title='Disney' videos={disneyVideos} size='large' />      
+          <SectionCards title='Travel' videos={travelVideos} size='small' />      
+          <SectionCards title='Productivity' videos={productivityVideos} size='medium' />      
+          <SectionCards title='Popular' videos={popularVideos} size='small' />      
+        </div>
+      </div>
     </div>
   )
 }
