@@ -1,29 +1,59 @@
 import Link from "next/link";
 import Image from "next/dist/client/image";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { magic } from "../../lib/magic-client";
+
 import styles from "./navbar.module.css";
 
-const NavBar = (props) => {
-
-  const {username} = props;
+const NavBar = () => {
+  
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [username, setUsername] = useState('');
   
   const router = useRouter();
+
+  useEffect(() => {
+    async function getUsername() {
+      try {
+        const { email } = await magic.user.getMetadata();
+        if (email) {
+          setUsername(email);
+        }
+      } catch (error) {
+        console.log("Error retrieving email:", error);
+      }
+    }
+    getUsername();
+  }, []);
 
   const handleOnClickHome = (e) => {
     e.preventDefault();
     router.push('/');
-  }
+  };
 
   const handleOnClickMyList = (e) => {
     e.preventDefault();
     router.push('/browse/my-list');
-  }
+  };
 
-  const [showDropdown, setShowDropdown] = useState(false);
   const handleShowDropdown = (e) => {
     e.preventDefault();
     setShowDropdown(!showDropdown);
+  };
+
+  const handleSignout = async (e) => {
+    e.preventDefault();
+
+    try{
+      await magic.user.logout();
+      console.log(await magic.user.isLoggedIn());
+      router.push('/login')
+    } catch (error) {
+      console.error('there was an error signing out', error);
+      router.push('/login')
+    }
   };
 
   return (
@@ -59,11 +89,9 @@ const NavBar = (props) => {
             {showDropdown && (
               <div className={styles.navDropdown}>
                 <div>
-                  <Link href='/login'>
-                    <a className={styles.linkName}>
-                      Sign Out
-                    </a>
-                  </Link>
+                  <a onClick={handleSignout} className={styles.linkName}>
+                    Sign Out
+                  </a>
                   <div className={styles.lineWrapper}></div>
                 </div>
               </div>
