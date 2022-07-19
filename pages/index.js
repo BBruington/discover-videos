@@ -30,12 +30,13 @@ export default function Home({ disneyVideos, travelVideos, productivityVideos, p
       </Head>
 
       <div className={styles.main}>
-        <NavBar username="BennyBoy@lmao.com" />
+        <NavBar username="BennyBoy@email.com" />
 
         <Banner 
           title='Clifford the red dog' 
           subTitle="a very cute dog"  
           imgUrl="/static/Clifford.webp"
+          videoId='4zH5iYM4wJo'
           />
 
         <div className={styles.sectionWrapper}>
