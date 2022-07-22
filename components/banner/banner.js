@@ -8,7 +8,6 @@ const Banner = (props) => {
   const router = useRouter();
   
   const handleOnPlay = () => {
-      console.log('handleOnPlay')
       router.push(`video/${videoId}`)
   }
   return (
@@ -37,9 +36,7 @@ const Banner = (props) => {
       <div className={styles.bannerImg} 
       style={{ backgroundImage: `url(${imgUrl})`,}}
       >
-
       </div>
-
     </div>
   )
 };
