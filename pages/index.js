@@ -20,7 +20,6 @@ export async function getServerSideProps() {
 
 export default function Home({ disneyVideos, travelVideos, productivityVideos, popularVideos }) {
   
-
   return (
     <div className={styles.container}>
       <Head>
