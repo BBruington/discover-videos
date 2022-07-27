@@ -2,7 +2,6 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Banner from '../components/banner/banner';
 import NavBar from '../components/nav/navbar';
-import Card from '../components/card/card';
 import SectionCards from '../components/card/section-cards';
 
 import { getVideos, getPopularVideos } from '../lib/videos';
