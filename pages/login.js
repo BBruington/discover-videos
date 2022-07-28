@@ -52,9 +52,6 @@ const Login = () => {
             if (didToken) {
 
               const response = await fetch('/api/login', {
-          //when calling your api on the front end remember
-          //to declare the method and the headers allows
-          //you to set up auth
                 method: 'POST',
                 headers: {
                   Authorization: `Bearer ${didToken}`,
@@ -64,7 +61,6 @@ const Login = () => {
 
               const loggedInResponse = await response.json();
               if (loggedInResponse.done) {
-                console.log({ loggedInResponse })
                 router.push('/');
               } else {
                 setIsLoading(false);

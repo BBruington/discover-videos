@@ -14,15 +14,15 @@ export default async function login(req, res) {
       const token = jwt.sign(
         {
           ...metadata,
-          iat: Math.floor(Date.now() / 1000), //date initiated
-          exp: Math.floor(Date.now() / 1000 + 7 * 24 * 60 * 60), //date expired
+          iat: Math.floor(Date.now() / 1000), 
+          exp: Math.floor(Date.now() / 1000 + 7 * 24 * 60 * 60), 
           "https://hasura.io/jwt/claims": {
             "x-hasura-allowed-roles": ["user", "admin"],
             "x-hasura-default-role": "user",
             "x-hasura-user-id": `${metadata.issuer}`,
-          }, //getting all data for the JWT token
+          }, 
         },
-        process.env.JWT_SECRET
+        process.env.HASURA_GRAPHQL_JWT_SECRET
       );
 
       const isNewUserQuery = await isNewUser(token, metadata.issuer);
