@@ -8,6 +8,7 @@ import clsx from 'classnames';
 import styles from '../../styles/Video.module.css';
 import Like from '../../components/icons/like-icon';
 import DisLike from '../../components/icons/dislike-icon';
+import { useState } from 'react';
 
 Modal.setAppElement('#__next');
 
@@ -38,10 +39,21 @@ export async function getStaticPaths() {
 const Video = ({video}) => {
   const router = useRouter();
 
-  
+  const [toggleLike, setToggleLike] = useState(false)
+  const [toggleDislike, setToggledisLike] = useState(false)
 
   const {title, publishTime, description, channelTitle, 
     statistics: {viewCount} = {viewCount: 0}} = video;
+
+    const handleToggleDislike = () => {
+      setToggledisLike(!toggleDislike)
+      setToggleLike(toggleLike = false)
+    };
+
+    const handleToggleLike = () => {      
+      setToggleLike(!toggleLike)
+      setToggledisLike(toggleDislike = false)
+    };
 
   return (
     <div className={styles.container}>
@@ -64,15 +76,15 @@ const Video = ({video}) => {
         </iframe>
         <div className={styles.likeDislikeBtnWrapper}>
           <div className={styles.likeBtnWrapper}>
-            <button>
+            <button onClick={handleToggleLike} >
               <div className={styles.btnWrapper}>
-                <Like />
+                <Like selected={toggleLike} />
               </div>
             </button>
           </div>
-          <button>
+          <button onClick={handleToggleDislike} >
             <div className={styles.btnWrapper}>
-              <DisLike />
+              <DisLike selected={toggleDislike} />
             </div>
           </button>
         </div>
