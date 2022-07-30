@@ -18,9 +18,20 @@ export default async function ststs( req, res ) {
 
         const userId = decodedToken.issuer;
 
-        const findVideoId = await findVideoIdByUser(token, userId, videoId);
+        const doesStatsExist = await findVideoIdByUser(token, userId, videoId);
 
-        res.send({ msg: 'api working ', decodedToken, findVideoId });  
+
+        if (doesStatsExist) {
+          const response = await updateStats(token, {
+            watched: true,
+            userId,
+            videoId,
+          });
+          res.send({ msg: 'api working', response });  
+        } else {
+          res.send({ msg: 'api working', decodedToken, doesStatsExist });  
+
+        }
       }
     } catch (error) {
       console.error('error', error);
