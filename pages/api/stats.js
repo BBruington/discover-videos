@@ -1,41 +1,54 @@
-import jwt from 'jsonwebtoken';
-import { findVideoIdByUser } from '../../lib/db/hasura';
+import { verifyToken } from "../../lib/utils";
+import { findVideoIdByUser, updateStats, insertStats } from '../../lib/db/hasura';
 
-export default async function ststs( req, res ) {
-  if (req.method === "POST") {
+export default async function stats( req, res ) {
+  try{
+    const token = req.cookies.token;
 
-    try{
+    if (!token) {
+      res.status(403).send({});
+    } else {
+      const inputParams = req.method === "POST" ? req.body : req.query;
 
-      const token = req.cookies.token;
+      const { videoId } = inputParams;
+      if (videoId) {
+        const userId = await verifyToken(token);
+        const findVideo = await findVideoIdByUser(token, userId, videoId);
+        const doesStatsExist = findVideo?.length > 0;
 
-      if (!token) {
-        res.status(403).send({});
-      }else{
-
-        const videoId = req.query.videoId;
-
-        const decodedToken = jwt.verify(token, process.env.HASURA_GRAPHQL_JWT_SECRET);
-
-        const userId = decodedToken.issuer;
-
-        const doesStatsExist = await findVideoIdByUser(token, userId, videoId);
-
-
-        if (doesStatsExist) {
-          const response = await updateStats(token, {
-            watched: true,
-            userId,
-            videoId,
-          });
-          res.send({ msg: 'api working', response });  
+        if (req.method === "POST") {
+          const { favorited, watched = true } = req.body;
+          if (doesStatsExist) {
+            // update it
+            const response = await updateStats(token, {
+              watched,
+              userId,
+              videoId,
+              favorited,
+            });
+            res.send({ data: response });
+          } else {
+            // add it
+            const response = await insertStats(token, {
+              watched,
+              userId,
+              videoId,
+              favorited,
+            });
+            res.send({ data: response });
+          }
         } else {
-          res.send({ msg: 'api working', decodedToken, doesStatsExist });  
-
+          if (doesStatsExist) {
+            res.send(findVideo);
+          } else {
+            res.status(404);
+            res.send({ user: null, msg: "Video not found" });
+          }
         }
       }
-    } catch (error) {
-      console.error('error', error);
-      res.status(500).send({ done: false, error: error?.message })
     }
+  } catch (error) {
+    console.error("Error occurred /stats", error);
+    resp.status(500).send({ done: false, error: error?.message });
   }
 }
