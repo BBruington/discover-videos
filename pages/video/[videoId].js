@@ -39,20 +39,45 @@ export async function getStaticPaths() {
 const Video = ({video}) => {
   const router = useRouter();
 
+  const videoId = router.query.videoId;
   const [toggleLike, setToggleLike] = useState(false)
   const [toggleDislike, setToggledisLike] = useState(false)
 
   const {title, publishTime, description, channelTitle, 
     statistics: {viewCount} = {viewCount: 0}} = video;
 
-    const handleToggleDislike = () => {
+    const runRatingService = async (favorited) => {
+      return await fetch('/api/stats', {
+        method: 'POST',
+        body: JSON.stringify({
+          videoId, 
+          favorited,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    const handleToggleDislike = async () => {
+
+      const val = !toggleDislike;
       setToggledisLike(!toggleDislike)
-      setToggleLike(toggleLike = false)
+      setToggleLike(toggleDislike)
+
+      const favorited = val ? 0 : 1;
+      const response = await runRatingService(favorited);
+      console.log("data", await response.json());
     };
 
-    const handleToggleLike = () => {      
-      setToggleLike(!toggleLike)
-      setToggledisLike(toggleDislike = false)
+    const handleToggleLike = async () => {   
+      const val = !toggleLike;
+      setToggleLike(val)
+      setToggledisLike(toggleLike)
+      const favorited = val ? 1 : 0;
+      const response = await runRatingService(favorited);
+      
+      console.log("data", await response.json());
     };
 
   return (
@@ -71,8 +96,8 @@ const Video = ({video}) => {
         className={styles.videoPlayer}
         type="text/html" 
         width="100%" height="390"
-        src={`http://www.youtube.com/embed/${router.query.videoId}?enablejsapi=1&origin=http://example.com&controls=0&rel=0`}
-        frameborder="0">
+        src={`http://www.youtube.com/embed/${videoId}?enablejsapi=1&origin=http://example.com&controls=0&rel=0`}
+        frameBorder="0">
         </iframe>
         <div className={styles.likeDislikeBtnWrapper}>
           <div className={styles.likeBtnWrapper}>
