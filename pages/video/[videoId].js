@@ -8,7 +8,7 @@ import clsx from 'classnames';
 import styles from '../../styles/Video.module.css';
 import Like from '../../components/icons/like-icon';
 import DisLike from '../../components/icons/dislike-icon';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 Modal.setAppElement('#__next');
 
@@ -45,6 +45,26 @@ const Video = ({video}) => {
 
   const {title, publishTime, description, channelTitle, 
     statistics: {viewCount} = {viewCount: 0}} = video;
+
+    useEffect( ()=>{
+      async function asyncUseEffect() {
+      const response = await fetch(`/api/stats?videoId=${videoId}`, {
+        method: 'GET',
+      });
+
+      const data = await response.json();
+      console.log({data})
+      if (data.length > 0 ) {
+        const favorited = data[0].favorited;
+        if (favorited === 1){
+          setToggleLike(true);
+        } else if (favorited === 0) {
+          setToggledisLike(true);
+        }
+      }
+    }
+    asyncUseEffect()
+    }, []);
 
     const runRatingService = async (favorited) => {
       return await fetch('/api/stats', {
