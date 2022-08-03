@@ -7,9 +7,8 @@ export default async function stats(req, res) {
       if (!token) {
         res.status(403).send({});
       } else {
-        const inputParams = req.method === 'POST' ? req.body
-        : req.query; 
-        const { videoId, } = inputParams;
+        const inputParams = req.method === 'POST' ? req.body : req.query; 
+        const { videoId } = inputParams;
 
         if (videoId) {
           

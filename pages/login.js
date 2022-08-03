@@ -9,6 +9,11 @@ import { magic } from "../lib/magic-client";
 import styles from "../styles/Login.module.css";
 
 const Login = () => {
+  const [email, setEmail] = useState('')
+  const [userMsg, setUserMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const router = useRouter();
 
   useEffect( () => {
     const handleComplete = () => {
@@ -24,11 +29,6 @@ const Login = () => {
     };
   }, [router])
 
-  const [email, setEmail] = useState('')
-  const [userMsg, setUserMsg] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const router = useRouter();
 
   const handleOnChangeEmail = (e) => {
     setUserMsg('');

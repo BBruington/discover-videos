@@ -1,13 +1,11 @@
 import { verifyToken } from "../lib/utils";
 
-const UseRedirectUser = async (context) => {
+export const redirectUser = async (context) => {
+  const token = context.req ? context.req.cookies?.token : null;
   const userId = await verifyToken(token);
-  const token = context.req ? context.req.cookies.token : null;
 
   return {
-    userId, 
+    userId,
     token,
-  }
+  };
 };
-
-export default UseRedirectUser;

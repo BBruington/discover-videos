@@ -11,22 +11,24 @@ const NavBar = () => {
   
   const [showDropdown, setShowDropdown] = useState(false);
   const [username, setUsername] = useState('');
+  const [didToken, setDidToken] = useState("");
   
   const router = useRouter();
 
   useEffect(() => {
-    async function getUsername() {
+    const applyUsernameInNav = async () => {
       try {
         const { email, issuer } = await magic.user.getMetadata();
         const didToken = await magic.user.getIdToken();
         if (email) {
           setUsername(email);
+          setDidToken(didToken);
         }
       } catch (error) {
-        console.log("Error retrieving email:", error);
+        console.error("Error retrieving email", error);
       }
-    }
-    getUsername();
+    };
+    applyUsernameInNav();
   }, []);
 
   const handleOnClickHome = (e) => {
@@ -47,13 +49,19 @@ const NavBar = () => {
   const handleSignout = async (e) => {
     e.preventDefault();
 
-    try{
-      await magic.user.logout();
-      console.log(await magic.user.isLoggedIn());
-      router.push('/login')
+    try {
+      const response = await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${didToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const res = await response.json();
     } catch (error) {
-      console.error('there was an error signing out', error);
-      router.push('/login')
+      console.error("Error logging out", error);
+      router.push("/login");
     }
   };
 
