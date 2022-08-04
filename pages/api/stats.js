@@ -12,7 +12,7 @@ export default async function stats(req, res) {
 
         if (videoId) {
           
-          const userId = verifyToken(token);
+          const userId = await verifyToken(token);
           const findVideo = await findVideoIdByUser(
             token,
             userId,
