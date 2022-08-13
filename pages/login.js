@@ -69,6 +69,7 @@ const Login = () => {
             }
           } catch(error) {
           console.error("there was an error", error)
+          setUserMsg('Failed to login')
           setIsLoading(false);
         }      
       } else {
