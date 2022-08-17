@@ -113,6 +113,7 @@ const Login = () => {
           <p className={styles.userMsg}>{userMsg}</p>
 
           <button 
+          type='submit'
           className={styles.loginBtn} 
           onClick={handleLoginWithEmail}>{isLoading? 'Loading...' : 'Sign In'}
           </button>
