@@ -102,21 +102,22 @@ const Login = () => {
 
         <div className={styles.mainWrapper}>
           <h1 className={styles.signinHeader}>Sign In</h1>
+          <form>
+            <input 
+            className={styles.emailInput} 
+            type='text' 
+            placeholder='Email address' 
+            onChange={handleOnChangeEmail}
+            />
 
-          <input 
-          className={styles.emailInput} 
-          type='text' 
-          placeholder='Email address' 
-          onChange={handleOnChangeEmail}
-          />
+            <p className={styles.userMsg}>{userMsg}</p>
 
-          <p className={styles.userMsg}>{userMsg}</p>
-
-          <button 
-          type='submit'
-          className={styles.loginBtn} 
-          onClick={handleLoginWithEmail}>{isLoading? 'Loading...' : 'Sign In'}
-          </button>
+            <button 
+            type='submit'
+            className={styles.loginBtn} 
+            onClick={handleLoginWithEmail}>{isLoading? 'Loading...' : 'Sign In'}
+            </button>
+          </form>
         </div>
       </main>
     </div>
